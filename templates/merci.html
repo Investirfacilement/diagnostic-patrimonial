@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Votre diagnostic est en route !</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0d1b2a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+  .icon { font-size: 56px; margin-bottom: 20px; }
+  h1 { color: #0d1b2a; font-size: 26px; margin-bottom: 12px; }
+  p  { color: #555; font-size: 15px; line-height: 1.6; margin-bottom: 16px; }
+  .highlight {
+    background: #eef0fd;
+    border-radius: 10px;
+    padding: 16px 20px;
+    color: #4361ee;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 24px 0;
+  }
+  .btn {
+    display: inline-block;
+    background: #4361ee;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    margin-top: 8px;
+    transition: background .2s;
+  }
+  .btn:hover { background: #3451d1; }
+  .disclaimer {
+    margin-top: 24px;
+    font-size: 12px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">📬</div>
+  <h1>Votre diagnostic est en route !</h1>
+  <p>
+    Merci <strong id="prenom-display"></strong>. Votre diagnostic patrimonial personnalisé
+    vient d'être généré et vous a été envoyé par email.
+  </p>
+  <div class="highlight">
+    📥 Vérifiez votre boîte mail dans les prochaines minutes.<br>
+    Pensez à regarder dans vos spams si besoin.
+  </div>
+  <p>
+    Ce diagnostic est un premier éclairage. Pour aller plus loin et construire
+    une vraie stratégie adaptée à votre profil :
+  </p>
+  <a href="#" id="calendly-btn" class="btn">
+    Réserver un échange gratuit de 30 min
+  </a>
+  <p class="disclaimer">
+    Ce diagnostic ne constitue pas un conseil personnalisé en investissement.<br>
+    Il sert à identifier vos grandes priorités patrimoniales.
+  </p>
+</div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const prenom = params.get('prenom') || '';
+  if (prenom) document.getElementById('prenom-display').textContent = prenom + ' !';
+
+  // Remplace par ton vrai lien Calendly
+  const calendlyUrl = "{{ calendly_url|default('#') }}";
+  document.getElementById('calendly-btn').href = calendlyUrl;
+</script>
+</body>
+</html>

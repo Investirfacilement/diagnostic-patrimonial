@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnostic patrimonial — 5 minutes pour y voir clair</title>
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --blue: #4361ee;
+    --blue-light: #7b8ff5;
+    --green: #06d6a0;
+    --orange: #f77f00;
+    --red: #d62828;
+    --gray: #f4f5f7;
+    --text: #1a1a2e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--gray);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--navy);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  header h1 { color: #fff; font-size: 20px; font-weight: 600; }
+  header p  { color: #9ab; font-size: 13px; margin-top: 4px; }
+
+  /* ── Progress bar ── */
+  #progress-wrap {
+    background: #dee2e6;
+    height: 5px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  #progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* ── Container ── */
+  .container {
+    max-width: 680px;
+    margin: 40px auto;
+    padding: 0 16px 80px;
+  }
+
+  /* ── Step card ── */
+  .step { display: none; }
+  .step.active { display: block; }
+
+  .step-header {
+    margin-bottom: 28px;
+  }
+  .step-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .step-header h2 { font-size: 22px; color: var(--navy); }
+  .step-header p  { color: #666; font-size: 14px; margin-top: 6px; }
+
+  /* ── Question card ── */
+  .question-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .question-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .answers { display: flex; flex-direction: column; gap: 8px; }
+
+  .answer-btn {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .answer-btn:hover {
+    border-color: var(--blue-light);
+    background: #eef0fd;
+  }
+  .answer-btn.selected {
+    border-color: var(--blue);
+    background: #eef0fd;
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .answer-btn .check {
+    width: 18px; height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    transition: all .2s;
+  }
+  .answer-btn.selected .check {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+  }
+
+  /* ── Nav buttons ── */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+  }
+  .btn-prev {
+    background: none;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #666;
+    transition: all .2s;
+  }
+  .btn-prev:hover { border-color: #aaa; color: var(--text); }
+
+  .btn-next {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-next:hover { background: #3451d1; }
+  .btn-next:disabled { background: #aaa; cursor: not-allowed; }
+
+  .step-count { font-size: 13px; color: #999; }
+
+  /* ── Identity step ── */
+  .input-group { margin-bottom: 16px; }
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .input-group input {
+    width: 100%;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 13px 16px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .input-group input:focus { border-color: var(--blue); }
+
+  /* ── Loading ── */
+  #loading {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 4px solid #dee2e6;
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 20px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading h3 { color: var(--navy); margin-bottom: 8px; }
+  #loading p  { color: #666; font-size: 14px; }
+
+  /* ── Disclaimer ── */
+  .disclaimer {
+    background: #fff8e1;
+    border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #666;
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Diagnostic patrimonial personnalisé</h1>
+  <p>En 5 à 10 minutes, obtenez une première lecture claire de votre situation financière</p>
+</header>
+
+<div id="progress-wrap"><div id="progress-bar"></div></div>
+
+<div class="container">
+
+  <!-- ── Step 0 : Identité ── -->
+  <div class="step active" id="step-0">
+    <div class="step-header">
+      <span class="step-badge">Bienvenue</span>
+      <h2>Commençons par vous connaître</h2>
+      <p>Ces informations servent uniquement à personnaliser votre diagnostic.</p>
+    </div>
+    <div class="question-card">
+      <div class="input-group">
+        <label for="prenom">Votre prénom</label>
+        <input type="text" id="prenom" placeholder="Prénom" autocomplete="given-name">
+      </div>
+      <div class="input-group">
+        <label for="email">Votre email</label>
+        <input type="email" id="email" placeholder="vous@email.com" autocomplete="email">
+      </div>
+    </div>
+    <div class="disclaimer">
+      Votre adresse email sert uniquement à vous envoyer votre diagnostic PDF. Aucun spam.
+    </div>
+    <div class="nav-row">
+      <span></span>
+      <button class="btn-next" onclick="startQuiz()">Commencer le diagnostic →</button>
+    </div>
+  </div>
+
+  <!-- ── Steps 1–5 : Questions (générées par JS) ── -->
+  {% for block_num in range(1, 5) %}
+  {% set block_questions = questions | selectattr("block", "equalto", block_num) | list %}
+  {% set block_names = {1: "Sécurité financière", 2: "Capacité d'investissement", 3: "Objectifs patrimoniaux", 4: "Maturité investisseur"} %}
+  {% set block_subtitles = {
+    1: "Évaluons la solidité de votre socle financier.",
+    2: "Voyons ce que vous pouvez mettre en mouvement.",
+    3: "Clarifions où vous voulez aller.",
+    4: "Mesurons votre expérience et vos connaissances."
+  } %}
+  <div class="step" id="step-{{ block_num }}">
+    <div class="step-header">
+      <span class="step-badge">Bloc {{ block_num }}/4</span>
+      <h2>{{ block_names[block_num] }}</h2>
+      <p>{{ block_subtitles[block_num] }}</p>
+    </div>
+
+    {% for q in block_questions %}
+    <div class="question-card" id="card-{{ q.id }}">
+      <div class="question-text">{{ q.text }}</div>
+      <div class="answers">
+        {% for i, a in q.answers | enumerate %}
+        <button class="answer-btn" onclick="selectAnswer('{{ q.id }}', {{ i }}, this)">
+          <span class="check">✓</span>
+          {{ a.text }}
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="nav-row">
+      <button class="btn-prev" onclick="prevStep()">← Retour</button>
+      <span class="step-count">{{ block_num }}/4</span>
+      <button class="btn-next" id="next-{{ block_num }}"
+              onclick="{{ 'submitForm()' if block_num == 4 else 'nextStep()' }}">
+        {{ 'Obtenir mon diagnostic →' if block_num == 4 else 'Suivant →' }}
+      </button>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- ── Loading ── -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <h3>Votre diagnostic est en cours de génération…</h3>
+    <p>Analyse de votre profil et génération du PDF personnalisé.<br>Cela prend environ 30 secondes.</p>
+  </div>
+
+</div>
+
+<script>
+  const answers  = {};
+  const TOTAL_STEPS = 4;
+  let currentStep = 0;
+
+  // Ajouter un filtre enumerate à Jinja via JS est impossible,
+  // mais les boutons sont déjà générés côté serveur.
+
+  function updateProgress() {
+    const pct = currentStep === 0 ? 0 : (currentStep / TOTAL_STEPS) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('step-' + n);
+    if (el) el.classList.add('active');
+    currentStep = n;
+    updateProgress();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function startQuiz() {
+    const prenom = document.getElementById('prenom').value.trim();
+    const email  = document.getElementById('email').value.trim();
+    if (!prenom) { alert('Merci de renseigner votre prénom.'); return; }
+    if (!email || !email.includes('@')) { alert('Merci de renseigner un email valide.'); return; }
+    showStep(1);
+  }
+
+  function selectAnswer(qid, idx, btn) {
+    // Déselectionner les autres réponses du même bloc
+    btn.closest('.answers').querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[qid] = idx;
+  }
+
+  function nextStep() {
+    showStep(currentStep + 1);
+  }
+
+  function prevStep() {
+    if (currentStep > 1) showStep(currentStep - 1);
+    else showStep(0);
+  }
+
+  async function submitForm() {
+    const prenom = document.getElementById('prenom').value.trim();
+    const email  = document.getElementById('email').value.trim();
+
+    // Masquer le formulaire, afficher le loader
+    document.getElementById('step-4').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('progress-bar').style.width = '100%';
+
+    try {
+      const resp = await fetch('/submit', {
+        method:  'POST',
+        headers: {'Content-Type': 'application/json'},
+        body:    JSON.stringify({ prenom, email, answers }),
+      });
+      const data = await resp.json();
+
+      if (data.success) {
+        window.location.href = '/merci?prenom=' + encodeURIComponent(prenom);
+      } else {
+        alert('Une erreur est survenue : ' + (data.error || 'veuillez réessayer.'));
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('step-4').style.display = 'block';
+      }
+    } catch (e) {
+      alert('Erreur réseau, veuillez réessayer.');
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('step-4').style.display = 'block';
+    }
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
