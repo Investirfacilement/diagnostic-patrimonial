@@ -1,26 +1,55 @@
 import os
-import requests
+import smtplib
+import base64
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+
+
+def _get_smtp():
+    return {
+        "host":     os.environ.get("SMTP_HOST", "smtp-relay.brevo.com"),
+        "port":     int(os.environ.get("SMTP_PORT", 587)),
+        "login":    os.environ["SMTP_LOGIN"],
+        "password": os.environ["SMTP_PASSWORD"],
+        "sender":   os.environ["SMTP_SENDER_EMAIL"],
+    }
+
+
+def _send(to_email: str, to_name: str, subject: str, html: str, pdf_path: str = None) -> None:
+    cfg = _get_smtp()
+
+    msg = MIMEMultipart("mixed")
+    msg["From"]    = f"{os.environ.get('ADVISOR_NAME', 'Conseiller')} <{cfg['sender']}>"
+    msg["To"]      = f"{to_name} <{to_email}>"
+    msg["Subject"] = subject
+
+    msg.attach(MIMEText(html, "html", "utf-8"))
+
+    if pdf_path and os.path.exists(pdf_path):
+        with open(pdf_path, "rb") as f:
+            part = MIMEBase("application", "octet-stream")
+            part.set_payload(f.read())
+        encoders.encode_base64(part)
+        part.add_header(
+            "Content-Disposition",
+            f"attachment; filename={os.path.basename(pdf_path)}",
+        )
+        msg.attach(part)
+
+    with smtplib.SMTP(cfg["host"], cfg["port"]) as server:
+        server.ehlo()
+        server.starttls()
+        server.login(cfg["login"], cfg["password"])
+        server.sendmail(cfg["sender"], to_email, msg.as_string())
 
 
 def send_diagnostic(to_email: str, prenom: str, pdf_path: str) -> None:
-    """Envoie le PDF du diagnostic au prospect via Brevo."""
-    import base64
+    advisor   = os.environ.get("ADVISOR_NAME", "Votre conseiller")
+    calendly  = os.environ.get("CALENDLY_URL", "#")
 
-    with open(pdf_path, "rb") as f:
-        pdf_b64 = base64.b64encode(f.read()).decode()
-
-    filename = os.path.basename(pdf_path)
-    advisor  = os.environ.get("ADVISOR_NAME", "Votre conseiller")
-    calendly = os.environ.get("CALENDLY_URL", "#")
-
-    payload = {
-        "sender": {
-            "name":  advisor,
-            "email": os.environ["BREVO_SENDER_EMAIL"],
-        },
-        "to": [{"email": to_email, "name": prenom}],
-        "subject": f"{prenom}, votre diagnostic patrimonial personnalisé est prêt",
-        "htmlContent": f"""
+    html = f"""
 <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#1a1a2e">
   <div style="background:#1a1a2e;padding:32px;text-align:center">
     <h1 style="color:#fff;margin:0;font-size:22px">Votre diagnostic patrimonial</h1>
@@ -45,35 +74,18 @@ def send_diagnostic(to_email: str, prenom: str, pdf_path: str) -> None:
     <p>À très bientôt,<br><strong>{advisor}</strong></p>
   </div>
 </div>
-""",
-        "attachment": [{"name": filename, "content": pdf_b64}],
-    }
-
-    resp = requests.post(
-        "https://api.brevo.com/v3/smtp/email",
-        json=payload,
-        headers={
-            "api-key":      os.environ["BREVO_API_KEY"],
-            "content-type": "application/json",
-        },
-        timeout=30,
-    )
-    resp.raise_for_status()
+"""
+    _send(to_email, prenom, f"{prenom}, votre diagnostic patrimonial est prêt", html, pdf_path)
 
 
 def notify_advisor(prenom: str, email: str, profile_name: str, total: int) -> None:
-    """Notifie le conseiller qu'un nouveau diagnostic a été généré."""
-    advisor_email = os.environ.get("ADVISOR_EMAIL", os.environ["BREVO_SENDER_EMAIL"])
+    advisor_email = os.environ.get("ADVISOR_EMAIL", os.environ["SMTP_SENDER_EMAIL"])
     advisor_name  = os.environ.get("ADVISOR_NAME", "Conseiller")
     calendly      = os.environ.get("CALENDLY_URL", "#")
 
-    payload = {
-        "sender": {"name": advisor_name, "email": os.environ["BREVO_SENDER_EMAIL"]},
-        "to": [{"email": advisor_email}],
-        "subject": f"🔔 Nouveau diagnostic — {prenom} ({total}/100 · {profile_name})",
-        "htmlContent": f"""
+    html = f"""
 <div style="font-family:Arial,sans-serif;max-width:500px;margin:auto">
-  <h2>Nouveau prospect qualifié</h2>
+  <h2>🔔 Nouveau prospect qualifié</h2>
   <table style="width:100%;border-collapse:collapse">
     <tr><td style="padding:8px;color:#666">Prénom</td><td><strong>{prenom}</strong></td></tr>
     <tr><td style="padding:8px;color:#666">Email</td><td>{email}</td></tr>
@@ -85,16 +97,7 @@ def notify_advisor(prenom: str, email: str, profile_name: str, total: int) -> No
        border-radius:6px;text-decoration:none">Voir Calendly</a>
   </p>
 </div>
-""",
-    }
-
-    resp = requests.post(
-        "https://api.brevo.com/v3/smtp/email",
-        json=payload,
-        headers={
-            "api-key":      os.environ["BREVO_API_KEY"],
-            "content-type": "application/json",
-        },
-        timeout=30,
-    )
-    resp.raise_for_status()
+"""
+    _send(advisor_email, advisor_name,
+          f"🔔 Nouveau diagnostic — {prenom} ({total}/100 · {profile_name})",
+          html)
