@@ -44,9 +44,12 @@ def submit():
         context  = pdf_gen.build_context(prenom, email, scores, profile, insights, proj)
         pdf_path = pdf_gen.generate_pdf(context)
 
-        # 5. Emails
-        email_svc.send_diagnostic(email, prenom, pdf_path)
-        email_svc.notify_advisor(prenom, email, profile["name"], scores["total"])
+        # 5. Emails (non-bloquant)
+        try:
+            email_svc.send_diagnostic(email, prenom, pdf_path)
+            email_svc.notify_advisor(prenom, email, profile["name"], scores["total"])
+        except Exception as email_exc:
+            app.logger.error(f"Erreur email (non-bloquant) : {email_exc}")
 
         return jsonify({
             "success": True,
