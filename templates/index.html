@@ -273,8 +273,8 @@
     <div class="question-card" id="card-{{ q.id }}">
       <div class="question-text">{{ q.text }}</div>
       <div class="answers">
-        {% for i, a in q.answers | enumerate %}
-        <button class="answer-btn" onclick="selectAnswer('{{ q.id }}', {{ i }}, this)">
+        {% for a in q.answers %}
+        <button class="answer-btn" onclick="selectAnswer('{{ q.id }}', {{ loop.index0 }}, this)">
           <span class="check">✓</span>
           {{ a.text }}
         </button>
