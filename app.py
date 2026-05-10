@@ -8,6 +8,7 @@ import scoring as sc
 import claude_service as claude
 import pdf_generator as pdf_gen
 import email_service as email_svc
+import sheets_service as sheets_svc
 
 app = Flask(__name__)
 
@@ -50,6 +51,12 @@ def submit():
             email_svc.notify_advisor(prenom, email, profile["name"], scores["total"])
         except Exception as email_exc:
             app.logger.error(f"Erreur email (non-bloquant) : {email_exc}")
+
+        # 6. Google Sheets (non-bloquant)
+        try:
+            sheets_svc.log_prospect(prenom, email, scores["total"], profile["name"])
+        except Exception as sheet_exc:
+            app.logger.error(f"Erreur Google Sheets (non-bloquant) : {sheet_exc}")
 
         return jsonify({
             "success": True,

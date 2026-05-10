@@ -1,7 +1,7 @@
 import os
 from datetime import date
 from jinja2 import Environment, FileSystemLoader
-from weasyprint import HTML, CSS
+from xhtml2pdf import pisa
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates", "pdf")
 OUTPUT_DIR   = os.path.join(os.path.dirname(__file__), "generated")
@@ -10,10 +10,6 @@ env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
 
 def generate_pdf(context: dict) -> str:
-    """
-    Génère le PDF du diagnostic et retourne son chemin local.
-    context doit contenir toutes les variables nécessaires au template.
-    """
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     template = env.get_template("diagnostic.html")
@@ -23,7 +19,12 @@ def generate_pdf(context: dict) -> str:
     filename = f"diagnostic_{prenom_clean}_{date.today().isoformat()}.pdf"
     output_path = os.path.join(OUTPUT_DIR, filename)
 
-    HTML(string=html_content, base_url=TEMPLATE_DIR).write_pdf(output_path)
+    with open(output_path, "wb") as f:
+        result = pisa.CreatePDF(html_content, dest=f)
+
+    if result.err:
+        raise RuntimeError(f"Erreur génération PDF : {result.err}")
+
     return output_path
 
 
@@ -41,10 +42,10 @@ def build_context(prenom: str, email: str, scores: dict, profile: dict,
     block_hex = {b: color_map[block_colors[b]] for b in range(1, 5)}
 
     score_label_map = {
-        range(0, 41):  ("Bases à sécuriser", "#d62828"),
-        range(41, 61): ("Situation à structurer", "#f77f00"),
-        range(61, 81): ("Bon potentiel patrimonial", "#4361ee"),
-        range(81, 101):("Optimisation avancée", "#06d6a0"),
+        range(0, 41):   ("Bases à sécuriser",       "#d62828"),
+        range(41, 61):  ("Situation à structurer",   "#f77f00"),
+        range(61, 81):  ("Bon potentiel patrimonial","#4361ee"),
+        range(81, 101): ("Optimisation avancée",     "#06d6a0"),
     }
     score_label, score_color = "—", "#333"
     for r, (lbl, col) in score_label_map.items():
@@ -53,18 +54,18 @@ def build_context(prenom: str, email: str, scores: dict, profile: dict,
             break
 
     return {
-        "prenom":        prenom,
-        "email":         email,
-        "date_str":      date.today().strftime("%d/%m/%Y"),
-        "scores":        scores,
-        "blocks":        BLOCKS,
-        "block_colors":  block_colors,
-        "block_hex":     block_hex,
-        "profile":       profile,
-        "insights":      insights,
-        "projection":    projection,
-        "score_label":   score_label,
-        "score_color":   score_color,
-        "calendly_url":  os.environ.get("CALENDLY_URL", "#"),
-        "advisor_name":  os.environ.get("ADVISOR_NAME", "Votre conseiller"),
+        "prenom":       prenom,
+        "email":        email,
+        "date_str":     date.today().strftime("%d/%m/%Y"),
+        "scores":       scores,
+        "blocks":       BLOCKS,
+        "block_colors": block_colors,
+        "block_hex":    block_hex,
+        "profile":      profile,
+        "insights":     insights,
+        "projection":   projection,
+        "score_label":  score_label,
+        "score_color":  score_color,
+        "calendly_url": os.environ.get("CALENDLY_URL", "#"),
+        "advisor_name": os.environ.get("ADVISOR_NAME", "Votre conseiller"),
     }
