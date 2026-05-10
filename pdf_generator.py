@@ -1,7 +1,7 @@
 import os
 from datetime import date
 from jinja2 import Environment, FileSystemLoader
-from xhtml2pdf import pisa
+from weasyprint import HTML
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates", "pdf")
 OUTPUT_DIR   = os.path.join(os.path.dirname(__file__), "generated")
@@ -19,10 +19,7 @@ def generate_pdf(context: dict) -> str:
     filename = f"diagnostic_{prenom_clean}_{date.today().isoformat()}.pdf"
     output_path = os.path.join(OUTPUT_DIR, filename)
 
-    with open(output_path, "wb") as f:
-        result = pisa.CreatePDF(html_content, dest=f)
-    if result.err:
-        raise RuntimeError(f"Erreur génération PDF : {result.err}")
+    HTML(string=html_content).write_pdf(output_path)
 
     return output_path
 
