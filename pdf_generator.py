@@ -19,8 +19,9 @@ def generate_pdf(context: dict) -> str:
     filename = f"diagnostic_{prenom_clean}_{date.today().isoformat()}.pdf"
     output_path = os.path.join(OUTPUT_DIR, filename)
 
+    default_css = "@page { size: A4; margin: 0; }"
     with open(output_path, "wb") as f:
-        result = pisa.CreatePDF(html_content, dest=f)
+        result = pisa.CreatePDF(html_content, dest=f, default_css=default_css)
     if result.err:
         raise RuntimeError(f"Erreur génération PDF : {result.err}")
 
