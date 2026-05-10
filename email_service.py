@@ -78,7 +78,7 @@ def send_diagnostic(to_email: str, prenom: str, pdf_path: str) -> None:
     _send(to_email, prenom, f"{prenom}, votre diagnostic patrimonial est prêt", html, pdf_path)
 
 
-def notify_advisor(prenom: str, email: str, profile_name: str, total: int) -> None:
+def notify_advisor(prenom: str, email: str, profile_name: str, total: int, pdf_path: str = None) -> None:
     advisor_email = os.environ.get("ADVISOR_EMAIL", os.environ["SMTP_SENDER_EMAIL"])
     advisor_name  = os.environ.get("ADVISOR_NAME", "Conseiller")
     calendly      = os.environ.get("CALENDLY_URL", "#")
@@ -100,4 +100,4 @@ def notify_advisor(prenom: str, email: str, profile_name: str, total: int) -> No
 """
     _send(advisor_email, advisor_name,
           f"🔔 Nouveau diagnostic — {prenom} ({total}/100 · {profile_name})",
-          html)
+          html, pdf_path)
