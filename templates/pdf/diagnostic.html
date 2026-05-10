@@ -3,10 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <style>
-  @page {
-    size: A4;
-    margin: 0;
-  }
+  @page { size: A4; margin: 0; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -17,41 +14,35 @@
     line-height: 1.5;
   }
 
-  /* ── Utilitaires ── */
   .page {
     width: 210mm;
-    min-height: 297mm;
+    height: 297mm;
     page-break-after: always;
-    position: relative;
     overflow: hidden;
   }
   .page:last-child { page-break-after: avoid; }
 
-  .green  { color: #06d6a0; }
-  .orange { color: #f77f00; }
-  .red    { color: #d62828; }
-  .blue   { color: #4361ee; }
-  .white  { color: #ffffff; }
-
-  /* ══════════════════════════════════════════
-     PAGE 1 — COUVERTURE
-  ══════════════════════════════════════════ */
-  .cover {
+  /* ── Header réutilisable ── */
+  .page-header {
     background: #0d1b2a;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 0;
+    padding: 14px 40px;
+    width: 100%;
   }
-  .cover-top {
-    padding: 48px 48px 32px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+  .page-header table { width: 100%; border-collapse: collapse; }
+  .page-header .brand { color: #fff; font-size: 10pt; font-weight: 700; letter-spacing: 1px; }
+  .page-header .page-info { color: #4a6272; font-size: 8pt; text-align: right; }
+
+  .page-content { padding: 28px 40px; }
+
+  .section-title { font-size: 15pt; font-weight: 800; color: #0d1b2a; margin-bottom: 4px; }
+  .section-subtitle { color: #666; font-size: 9pt; margin-bottom: 20px; }
+
+  /* ══ PAGE 1 — COUVERTURE ══ */
+  .cover { background: #0d1b2a; }
+
+  .cover-inner { padding: 48px 48px 0; }
+
   .cover-badge {
-    display: inline-block;
     background: #4361ee;
     color: #fff;
     font-size: 9pt;
@@ -60,371 +51,311 @@
     text-transform: uppercase;
     padding: 5px 14px;
     border-radius: 20px;
+    display: inline-block;
     margin-bottom: 28px;
-    width: fit-content;
   }
+
   .cover h1 {
     color: #ffffff;
-    font-size: 30pt;
+    font-size: 28pt;
     font-weight: 800;
     line-height: 1.2;
     margin-bottom: 16px;
   }
+
   .cover-subtitle {
     color: #8fa3b1;
-    font-size: 12pt;
-    max-width: 380px;
-    line-height: 1.6;
-    margin-bottom: 40px;
+    font-size: 11pt;
+    margin-bottom: 36px;
   }
+
   .cover-divider {
     width: 60px;
     height: 4px;
-    background: linear-gradient(90deg, #4361ee, #06d6a0);
-    border-radius: 2px;
-    margin-bottom: 40px;
+    background: #4361ee;
+    margin-bottom: 36px;
   }
-  .cover-meta {
-    display: flex;
-    gap: 40px;
-  }
-  .cover-meta-item label {
-    display: block;
+
+  .cover-meta-table { border-collapse: collapse; width: 400px; }
+  .cover-meta-table td { padding: 0 32px 0 0; vertical-align: top; }
+  .cover-meta-label {
     color: #4a6272;
     font-size: 8pt;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 4px;
+    display: block;
+    margin-bottom: 3px;
   }
-  .cover-meta-item span {
-    color: #fff;
-    font-size: 13pt;
-    font-weight: 600;
-  }
-  .cover-bottom {
-    background: #4361ee;
-    padding: 18px 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .cover-bottom p {
-    color: rgba(255,255,255,0.85);
-    font-size: 9pt;
-  }
+  .cover-meta-value { color: #fff; font-size: 13pt; font-weight: 600; }
+
   .cover-disclaimer {
-    background: rgba(255,255,255,0.1);
-    border-radius: 6px;
+    background: #ffffff18;
+    border-left: 3px solid #4361ee;
     padding: 12px 20px;
-    margin: 0 48px 48px;
+    margin: 36px 48px 36px;
     color: #8fa3b1;
     font-size: 8pt;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
-  /* ══════════════════════════════════════════
-     HEADER réutilisable (pages 2-8)
-  ══════════════════════════════════════════ */
-  .page-header {
-    background: #0d1b2a;
-    padding: 18px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .cover-footer {
+    background: #4361ee;
+    padding: 16px 48px;
+    width: 100%;
   }
-  .page-header .brand {
-    color: #fff;
-    font-size: 10pt;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-  .page-header .page-info {
-    color: #4a6272;
-    font-size: 8pt;
-  }
+  .cover-footer table { width: 100%; border-collapse: collapse; }
+  .cover-footer td { color: rgba(255,255,255,0.85); font-size: 9pt; }
+  .cover-footer .right { text-align: right; }
 
-  .page-content { padding: 32px 40px; }
-
-  .section-title {
-    font-size: 15pt;
-    font-weight: 800;
-    color: #0d1b2a;
-    margin-bottom: 6px;
-  }
-  .section-subtitle {
-    color: #666;
-    font-size: 9pt;
-    margin-bottom: 24px;
-  }
-
-  /* ══════════════════════════════════════════
-     PAGE 2 — SYNTHÈSE
-  ══════════════════════════════════════════ */
+  /* ══ PAGE 2 — SYNTHÈSE ══ */
   .score-hero {
-    background: linear-gradient(135deg, #0d1b2a 0%, #1a2f4a 100%);
-    border-radius: 12px;
-    padding: 28px 32px;
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    margin-bottom: 28px;
-  }
-  .score-circle {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    background: conic-gradient({{ score_color }} {{ scores.total }}%, #2a3f5a {{ scores.total }}%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-  }
-  .score-circle-inner {
-    width: 80px;
-    height: 80px;
     background: #0d1b2a;
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+  .score-hero table { border-collapse: collapse; width: 100%; }
+  .score-hero td { vertical-align: middle; }
+
+  .score-circle-box {
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    background: #1a2f4a;
+    border: 6px solid {{ score_color }};
+    text-align: center;
+    padding-top: 22px;
   }
-  .score-number {
-    color: #fff;
-    font-size: 22pt;
-    font-weight: 800;
-    line-height: 1;
-  }
+  .score-number { color: #fff; font-size: 22pt; font-weight: 800; line-height: 1; }
   .score-max { color: #4a6272; font-size: 9pt; }
-  .score-info h3 { color: #fff; font-size: 14pt; font-weight: 700; margin-bottom: 6px; }
-  .score-info p  { color: #8fa3b1; font-size: 10pt; }
-  .score-label {
+
+  .score-info-cell { padding-left: 28px; }
+  .score-info-title { color: #fff; font-size: 13pt; font-weight: 700; margin-bottom: 6px; }
+  .score-label-badge {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 9pt;
     font-weight: 700;
-    margin-top: 8px;
     color: {{ score_color }};
     border: 2px solid {{ score_color }};
+    margin-bottom: 8px;
   }
+  .score-profile { color: #8fa3b1; font-size: 10pt; }
+  .score-profile strong { color: #fff; }
 
-  .blocks-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
+  .blocks-table { border-collapse: collapse; width: 100%; }
+  .blocks-table td { padding: 6px; vertical-align: top; width: 50%; }
+
   .block-card {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 16px 18px;
-    border-left: 4px solid {{ '#ccc' }};
+    border-radius: 8px;
+    padding: 14px 16px;
+    border-left: 4px solid #ccc;
   }
   .block-card.green  { border-left-color: #06d6a0; background: #f0fdf9; }
   .block-card.orange { border-left-color: #f77f00; background: #fff8f0; }
   .block-card.red    { border-left-color: #d62828; background: #fff5f5; }
 
-  .block-name  { font-size: 9pt; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .block-name  { font-size: 8pt; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
   .block-score { font-size: 18pt; font-weight: 800; line-height: 1; }
-  .block-score span { font-size: 10pt; color: #999; font-weight: 400; }
+  .block-score-sub { font-size: 10pt; color: #999; font-weight: 400; }
 
-  .block-bar-bg {
-    background: #e0e0e0;
-    border-radius: 4px;
-    height: 6px;
-    margin-top: 8px;
-    overflow: hidden;
-  }
-  .block-bar-fill { height: 100%; border-radius: 4px; }
+  .bar-bg { background: #e0e0e0; border-radius: 4px; height: 6px; margin-top: 8px; width: 100%; }
+  .bar-fill { height: 6px; border-radius: 4px; }
 
-  /* ══════════════════════════════════════════
-     PAGE 3 — PROFIL
-  ══════════════════════════════════════════ */
+  /* ══ PAGE 3 — PROFIL ══ */
   .profile-hero {
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
     background: {{ profile.color }};
-    border-radius: 12px;
-    padding: 28px 32px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
   }
-  .profile-icon { font-size: 40pt; }
-  .profile-hero h2 { color: #fff; font-size: 18pt; font-weight: 800; margin-bottom: 4px; }
-  .profile-hero p  { color: rgba(255,255,255,0.85); font-size: 10pt; }
-  .profile-badge {
+  .profile-hero table { border-collapse: collapse; width: 100%; }
+  .profile-hero td { vertical-align: middle; }
+  .profile-icon-cell { font-size: 36pt; width: 70px; }
+  .profile-text-cell { padding-left: 16px; }
+
+  .profile-badge-tag {
     display: inline-block;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.25);
     color: #fff;
     font-size: 8pt;
     padding: 3px 10px;
     border-radius: 20px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
   }
+  .profile-hero h2 { color: #fff; font-size: 16pt; font-weight: 800; margin-bottom: 4px; }
+  .profile-hero p  { color: rgba(255,255,255,0.85); font-size: 10pt; }
 
   .profile-description {
     background: #f8f9fa;
-    border-radius: 10px;
-    padding: 20px 24px;
-    font-size: 11pt;
+    border-radius: 8px;
+    padding: 18px 22px;
+    font-size: 10.5pt;
     line-height: 1.7;
     color: #333;
     border-left: 4px solid {{ profile.color }};
+    margin-bottom: 20px;
   }
 
-  /* ══════════════════════════════════════════
-     PAGES 4-5 — POINTS FORTS / VIGILANCES
-  ══════════════════════════════════════════ */
+  .bar-row { margin-bottom: 10px; }
+  .bar-row-label { font-size: 9.5pt; color: #444; margin-bottom: 3px; }
+  .bar-row-score { font-size: 9.5pt; font-weight: 700; text-align: right; }
+  .bar-label-table { border-collapse: collapse; width: 100%; margin-bottom: 3px; }
+  .bar-label-table td { padding: 0; }
+
+  /* ══ PAGES 4-5 — POINTS FORTS / VIGILANCES ══ */
   .point-item {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-left: 3px solid #ccc;
     background: #f8f9fa;
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 12px;
   }
-  .point-item.green  { background: #f0fdf9; border-left: 3px solid #06d6a0; }
-  .point-item.orange { background: #fff8f0; border-left: 3px solid #f77f00; }
-  .point-item.red    { background: #fff5f5; border-left: 3px solid #d62828; }
+  .point-item.green  { background: #f0fdf9; border-left-color: #06d6a0; }
+  .point-item.orange { background: #fff8f0; border-left-color: #f77f00; }
+  .point-item.red    { background: #fff5f5; border-left-color: #d62828; }
+  .point-item table  { border-collapse: collapse; width: 100%; }
+  .point-item td     { vertical-align: top; }
 
   .point-dot {
-    width: 28px; height: 28px;
+    width: 26px; height: 26px;
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13pt;
-    flex-shrink: 0;
-    margin-top: 2px;
+    text-align: center;
+    padding-top: 4px;
+    font-size: 11pt;
+    font-weight: 700;
   }
-  .point-dot.green  { background: #d4f7ec; }
-  .point-dot.orange { background: #ffe8c8; }
-  .point-dot.red    { background: #ffd5d5; }
+  .point-dot.green  { background: #d4f7ec; color: #06d6a0; }
+  .point-dot.orange { background: #ffe8c8; color: #f77f00; }
+  .point-dot.red    { background: #ffd5d5; color: #d62828; }
 
-  .point-text { font-size: 10.5pt; color: #333; line-height: 1.5; }
+  .point-text-cell { padding-left: 12px; font-size: 10pt; color: #333; line-height: 1.5; }
 
-  /* ══════════════════════════════════════════
-     PAGE 6 — PRIORITÉS
-  ══════════════════════════════════════════ */
+  /* ══ PAGE 6 — PRIORITÉS ══ */
   .priority-card {
     background: #f8f9fa;
-    border-radius: 10px;
-    padding: 20px 22px;
-    margin-bottom: 16px;
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
   }
+  .priority-card table { border-collapse: collapse; width: 100%; }
+  .priority-card td { vertical-align: top; }
+
   .priority-num {
-    width: 36px; height: 36px;
+    width: 34px; height: 34px;
     background: #4361ee;
     color: #fff;
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14pt;
+    text-align: center;
+    padding-top: 6px;
+    font-size: 13pt;
     font-weight: 800;
-    flex-shrink: 0;
+    min-width: 34px;
   }
-  .priority-content h3 {
-    font-size: 12pt;
-    font-weight: 700;
-    color: #0d1b2a;
-    margin-bottom: 6px;
-  }
-  .priority-content p { font-size: 10pt; color: #555; line-height: 1.6; }
+  .priority-content { padding-left: 14px; }
+  .priority-content h3 { font-size: 11pt; font-weight: 700; color: #0d1b2a; margin-bottom: 5px; }
+  .priority-content p  { font-size: 10pt; color: #555; line-height: 1.5; }
 
-  /* ══════════════════════════════════════════
-     PAGE 7 — PROJECTION
-  ══════════════════════════════════════════ */
+  .info-box {
+    background: #eef0fd;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 8px;
+  }
+  .info-box p { font-size: 9pt; color: #4361ee; line-height: 1.5; }
+
+  /* ══ PAGE 7 — PROJECTION ══ */
   .projection-header {
     background: #0d1b2a;
-    border-radius: 10px;
-    padding: 16px 22px;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 32px;
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin-bottom: 18px;
   }
-  .proj-meta label { color: #4a6272; font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
-  .proj-meta span  { color: #fff; font-size: 12pt; font-weight: 700; }
+  .projection-header table { border-collapse: collapse; width: 100%; }
+  .projection-header td { padding-right: 32px; vertical-align: top; }
+  .proj-label { color: #4a6272; font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
+  .proj-value { color: #fff; font-size: 12pt; font-weight: 700; }
 
-  .scenario-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .scenario-table { border-collapse: collapse; width: 100%; margin-bottom: 18px; }
+  .scenario-table td { padding: 6px; width: 33%; vertical-align: top; }
+
   .scenario-card {
-    border-radius: 10px;
-    padding: 18px 16px;
+    border-radius: 8px;
+    padding: 16px 14px;
     text-align: center;
+    background: #eef0fd;
   }
-  .scenario-card.prudent  { background: #eef0fd; border-top: 4px solid #8fa3b1; }
-  .scenario-card.equilibre{ background: #eef0fd; border-top: 4px solid #4361ee; }
-  .scenario-card.dynamique{ background: #eef0fd; border-top: 4px solid #06d6a0; }
+  .scenario-card.prudent   { border-top: 4px solid #8fa3b1; }
+  .scenario-card.equilibre { border-top: 4px solid #4361ee; }
+  .scenario-card.dynamique { border-top: 4px solid #06d6a0; }
 
-  .scenario-name   { font-size: 9pt; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 6px; }
-  .scenario-rate   { font-size: 8pt; color: #999; margin-bottom: 10px; }
-  .scenario-amount { font-size: 16pt; font-weight: 800; color: #0d1b2a; }
+  .scenario-name   { font-size: 9pt; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 4px; }
+  .scenario-rate   { font-size: 8pt; color: #999; margin-bottom: 8px; }
+  .scenario-amount { font-size: 15pt; font-weight: 800; color: #0d1b2a; }
   .scenario-note   { font-size: 8pt; color: #999; margin-top: 4px; }
 
   .versements-bar {
     background: #f0fdf9;
     border: 2px solid #06d6a0;
-    border-radius: 10px;
-    padding: 14px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-bottom: 14px;
   }
-  .versements-bar p   { font-size: 10pt; color: #333; }
-  .versements-bar span{ font-size: 14pt; font-weight: 800; color: #06d6a0; }
+  .versements-bar table { border-collapse: collapse; width: 100%; }
+  .versements-bar td { vertical-align: middle; }
+  .versements-bar .label { font-size: 10pt; color: #333; }
+  .versements-bar .amount { font-size: 13pt; font-weight: 800; color: #06d6a0; text-align: right; }
 
-  .projection-disclaimer {
+  .disclaimer-box {
     background: #fff8e1;
     border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 8.5pt;
+    padding: 10px 14px;
+    font-size: 8pt;
     color: #888;
-    margin-top: 14px;
     line-height: 1.5;
   }
 
-  /* ══════════════════════════════════════════
-     PAGE 8 — CONCLUSION + CTA
-  ══════════════════════════════════════════ */
+  /* ══ PAGE 8 — CONCLUSION ══ */
   .conclusion-box {
     background: #f8f9fa;
-    border-radius: 10px;
-    padding: 22px 26px;
-    margin-bottom: 24px;
-    font-size: 11pt;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    font-size: 10.5pt;
     color: #333;
     line-height: 1.7;
     border-left: 4px solid #4361ee;
   }
 
   .cta-box {
-    background: linear-gradient(135deg, #4361ee 0%, #3451d1 100%);
-    border-radius: 14px;
-    padding: 32px 36px;
+    background: #4361ee;
+    border-radius: 12px;
+    padding: 28px 32px;
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
-  .cta-box h2 { color: #fff; font-size: 16pt; margin-bottom: 8px; }
-  .cta-box p  { color: rgba(255,255,255,0.8); font-size: 10pt; margin-bottom: 20px; }
+  .cta-box h2 { color: #fff; font-size: 15pt; margin-bottom: 8px; }
+  .cta-box p  { color: rgba(255,255,255,0.85); font-size: 10pt; margin-bottom: 18px; }
   .cta-url {
     display: inline-block;
     background: #fff;
     color: #4361ee;
     font-size: 11pt;
     font-weight: 700;
-    padding: 12px 28px;
-    border-radius: 8px;
+    padding: 10px 26px;
+    border-radius: 6px;
     text-decoration: none;
   }
 
   .footer-note {
     background: #f4f5f7;
-    border-radius: 8px;
-    padding: 12px 16px;
+    border-radius: 6px;
+    padding: 10px 14px;
     font-size: 8pt;
     color: #999;
     line-height: 1.5;
@@ -434,127 +365,132 @@
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════
-     PAGE 1 — COUVERTURE
-══════════════════════════════════════════ -->
+<!-- ══ PAGE 1 — COUVERTURE ══ -->
 <div class="page cover">
-  <div class="cover-top">
-    <span class="cover-badge">Diagnostic patrimonial</span>
+  <div class="cover-inner">
+    <div class="cover-badge">Diagnostic patrimonial</div>
     <h1>Votre diagnostic<br>patrimonial<br>personnalisé</h1>
-    <p class="cover-subtitle">
-      Une première lecture claire de votre situation financière
-      et de vos priorités d'investissement.
-    </p>
+    <p class="cover-subtitle">Une première lecture claire de votre situation financière<br>et de vos priorités d'investissement.</p>
     <div class="cover-divider"></div>
-    <div class="cover-meta">
-      <div class="cover-meta-item">
-        <label>Préparé pour</label>
-        <span>{{ prenom }}</span>
-      </div>
-      <div class="cover-meta-item">
-        <label>Date</label>
-        <span>{{ date_str }}</span>
-      </div>
-      <div class="cover-meta-item">
-        <label>Score global</label>
-        <span style="color: {{ score_color }}">{{ scores.total }}/100</span>
-      </div>
-    </div>
+    <table class="cover-meta-table">
+      <tr>
+        <td>
+          <span class="cover-meta-label">Préparé pour</span>
+          <span class="cover-meta-value">{{ prenom }}</span>
+        </td>
+        <td>
+          <span class="cover-meta-label">Date</span>
+          <span class="cover-meta-value">{{ date_str }}</span>
+        </td>
+        <td>
+          <span class="cover-meta-label">Score global</span>
+          <span class="cover-meta-value" style="color:{{ score_color }}">{{ scores.total }}/100</span>
+        </td>
+      </tr>
+    </table>
   </div>
   <div class="cover-disclaimer">
     ⚠️ Ce diagnostic ne constitue pas un conseil personnalisé en investissement au sens réglementaire.
     Il sert à identifier vos grandes priorités patrimoniales et à préparer un échange avec un professionnel.
   </div>
-  <div class="cover-bottom">
-    <p>{{ advisor_name }}</p>
-    <p>{{ date_str }}</p>
+  <div class="cover-footer">
+    <table>
+      <tr>
+        <td>{{ advisor_name }}</td>
+        <td class="right">{{ date_str }}</td>
+      </tr>
+    </table>
   </div>
 </div>
 
 
-<!-- ══════════════════════════════════════════
-     PAGE 2 — SYNTHÈSE GLOBALE
-══════════════════════════════════════════ -->
+<!-- ══ PAGE 2 — SYNTHÈSE ══ -->
 <div class="page">
   <div class="page-header">
-    <span class="brand">DIAGNOSTIC PATRIMONIAL</span>
-    <span class="page-info">{{ prenom }} · Synthèse globale</span>
+    <table><tr>
+      <td class="brand">DIAGNOSTIC PATRIMONIAL</td>
+      <td class="page-info">{{ prenom }} · Synthèse globale</td>
+    </tr></table>
   </div>
   <div class="page-content">
-    <h2 class="section-title">Votre synthèse globale</h2>
-    <p class="section-subtitle">Résultat de votre évaluation sur les 4 dimensions patrimoniales clés.</p>
+    <div class="section-title">Votre synthèse globale</div>
+    <div class="section-subtitle">Résultat de votre évaluation sur les 4 dimensions patrimoniales clés.</div>
 
     <div class="score-hero">
-      <div class="score-circle">
-        <div class="score-circle-inner">
-          <span class="score-number">{{ scores.total }}</span>
-          <span class="score-max">/100</span>
-        </div>
-      </div>
-      <div class="score-info">
-        <h3>Score de structuration patrimoniale</h3>
-        <span class="score-label">{{ score_label }}</span>
-        <p style="margin-top:10px">Profil identifié : <strong style="color:#fff">{{ profile.name }}</strong></p>
-      </div>
+      <table><tr>
+        <td style="width:110px">
+          <div class="score-circle-box">
+            <div class="score-number">{{ scores.total }}</div>
+            <div class="score-max">/100</div>
+          </div>
+        </td>
+        <td class="score-info-cell">
+          <div class="score-info-title">Score de structuration patrimoniale</div>
+          <div class="score-label-badge">{{ score_label }}</div>
+          <div class="score-profile">Profil identifié : <strong>{{ profile.name }}</strong></div>
+        </td>
+      </tr></table>
     </div>
 
-    <div class="blocks-grid">
+    <table class="blocks-table">
       {% for b in range(1, 5) %}
+      {% if b % 2 == 1 %}<tr>{% endif %}
       {% set s = scores.blocks[b] %}
       {% set c = block_colors[b] %}
       {% set h = block_hex[b] %}
-      <div class="block-card {{ c }}">
-        <div class="block-name">{{ blocks[b] }}</div>
-        <div class="block-score" style="color:{{ h }}">
-          {{ s }}<span>/25</span>
+      <td>
+        <div class="block-card {{ c }}">
+          <div class="block-name">{{ blocks[b] }}</div>
+          <div class="block-score" style="color:{{ h }}">{{ s }}<span class="block-score-sub">/25</span></div>
+          <div class="bar-bg">
+            <div class="bar-fill" style="width:{{ (s/25*100)|int }}%; background:{{ h }};"></div>
+          </div>
         </div>
-        <div class="block-bar-bg">
-          <div class="block-bar-fill" style="width:{{ (s/25*100)|int }}%; background:{{ h }};"></div>
-        </div>
-      </div>
+      </td>
+      {% if b % 2 == 0 %}</tr>{% endif %}
       {% endfor %}
-    </div>
+    </table>
   </div>
 </div>
 
 
-<!-- ══════════════════════════════════════════
-     PAGE 3 — VOTRE PROFIL
-══════════════════════════════════════════ -->
+<!-- ══ PAGE 3 — PROFIL ══ -->
 <div class="page">
   <div class="page-header">
-    <span class="brand">DIAGNOSTIC PATRIMONIAL</span>
-    <span class="page-info">{{ prenom }} · Votre profil</span>
+    <table><tr>
+      <td class="brand">DIAGNOSTIC PATRIMONIAL</td>
+      <td class="page-info">{{ prenom }} · Votre profil</td>
+    </tr></table>
   </div>
   <div class="page-content">
-    <h2 class="section-title">Votre profil patrimonial</h2>
-    <p class="section-subtitle">Basé sur l'ensemble de vos réponses.</p>
+    <div class="section-title">Votre profil patrimonial</div>
+    <div class="section-subtitle">Basé sur l'ensemble de vos réponses.</div>
 
     <div class="profile-hero">
-      <div class="profile-icon">{{ profile.icon }}</div>
-      <div>
-        <span class="profile-badge">Profil {{ profile.num }}/4</span>
-        <h2>{{ profile.name }}</h2>
-        <p>Score : {{ scores.total }}/100</p>
-      </div>
+      <table><tr>
+        <td class="profile-icon-cell">{{ profile.icon }}</td>
+        <td class="profile-text-cell">
+          <div class="profile-badge-tag">Profil {{ profile.num }}/4</div>
+          <h2>{{ profile.name }}</h2>
+          <p>Score : {{ scores.total }}/100</p>
+        </td>
+      </tr></table>
     </div>
 
-    <div class="profile-description">
-      {{ profile.message }}
-    </div>
+    <div class="profile-description">{{ profile.message }}</div>
 
-    <div style="margin-top:24px">
-      <h3 style="font-size:11pt;color:#0d1b2a;margin-bottom:14px;">Répartition de votre score</h3>
+    <div style="margin-top:16px">
+      <div style="font-size:11pt;color:#0d1b2a;font-weight:700;margin-bottom:12px;">Répartition de votre score</div>
       {% for b in range(1, 5) %}
       {% set s = scores.blocks[b] %}
       {% set h = block_hex[b] %}
-      <div style="margin-bottom:12px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-          <span style="font-size:9.5pt;color:#444;">{{ blocks[b] }}</span>
-          <span style="font-size:9.5pt;font-weight:700;color:{{ h }}">{{ s }}/25</span>
-        </div>
-        <div style="background:#e0e0e0;border-radius:4px;height:8px;overflow:hidden;">
-          <div style="width:{{ (s/25*100)|int }}%;height:100%;background:{{ h }};border-radius:4px;"></div>
+      <div class="bar-row">
+        <table class="bar-label-table"><tr>
+          <td class="bar-row-label">{{ blocks[b] }}</td>
+          <td class="bar-row-score" style="color:{{ h }}">{{ s }}/25</td>
+        </tr></table>
+        <div class="bar-bg">
+          <div class="bar-fill" style="width:{{ (s/25*100)|int }}%; background:{{ h }};"></div>
         </div>
       </div>
       {% endfor %}
@@ -563,50 +499,54 @@
 </div>
 
 
-<!-- ══════════════════════════════════════════
-     PAGE 4 — VOS POINTS FORTS
-══════════════════════════════════════════ -->
+<!-- ══ PAGE 4 — POINTS FORTS ══ -->
 <div class="page">
   <div class="page-header">
-    <span class="brand">DIAGNOSTIC PATRIMONIAL</span>
-    <span class="page-info">{{ prenom }} · Points forts</span>
+    <table><tr>
+      <td class="brand">DIAGNOSTIC PATRIMONIAL</td>
+      <td class="page-info">{{ prenom }} · Points forts</td>
+    </tr></table>
   </div>
   <div class="page-content">
-    <h2 class="section-title">✅ Vos points forts</h2>
-    <p class="section-subtitle">Ce que vous faites déjà bien — et qu'il faut préserver.</p>
+    <div class="section-title">✅ Vos points forts</div>
+    <div class="section-subtitle">Ce que vous faites déjà bien — et qu'il faut préserver.</div>
 
     {% for point in insights.points_forts %}
     <div class="point-item green">
-      <div class="point-dot green">✓</div>
-      <span class="point-text">{{ point }}</span>
+      <table><tr>
+        <td style="width:30px"><div class="point-dot green">✓</div></td>
+        <td class="point-text-cell">{{ point }}</td>
+      </tr></table>
     </div>
     {% endfor %}
   </div>
 </div>
 
 
-<!-- ══════════════════════════════════════════
-     PAGE 5 — POINTS DE VIGILANCE
-══════════════════════════════════════════ -->
+<!-- ══ PAGE 5 — VIGILANCES ══ -->
 <div class="page">
   <div class="page-header">
-    <span class="brand">DIAGNOSTIC PATRIMONIAL</span>
-    <span class="page-info">{{ prenom }} · Points de vigilance</span>
+    <table><tr>
+      <td class="brand">DIAGNOSTIC PATRIMONIAL</td>
+      <td class="page-info">{{ prenom }} · Points de vigilance</td>
+    </tr></table>
   </div>
   <div class="page-content">
-    <h2 class="section-title">⚠️ Vos points de vigilance</h2>
-    <p class="section-subtitle">Les axes à améliorer selon votre profil actuel.</p>
+    <div class="section-title">⚠️ Vos points de vigilance</div>
+    <div class="section-subtitle">Les axes à améliorer selon votre profil actuel.</div>
 
     {% for v in insights.vigilances %}
     <div class="point-item {{ v.niveau }}">
-      <div class="point-dot {{ v.niveau }}">
-        {{ '🔴' if v.niveau == 'rouge' else '🟠' }}
-      </div>
-      <span class="point-text">{{ v.texte }}</span>
+      <table><tr>
+        <td style="width:30px">
+          <div class="point-dot {{ v.niveau }}">{{ '●' }}</div>
+        </td>
+        <td class="point-text-cell">{{ v.texte }}</td>
+      </tr></table>
     </div>
     {% endfor %}
 
-    <div style="margin-top:20px;background:#f8f9fa;border-radius:8px;padding:14px 18px;">
+    <div style="margin-top:16px;background:#f8f9fa;border-radius:6px;padding:12px 16px;">
       <p style="font-size:9pt;color:#666;line-height:1.6;">
         <strong>Légende :</strong>
         <span style="color:#f77f00">● Orange</span> = point à améliorer ·
@@ -617,93 +557,105 @@
 </div>
 
 
-<!-- ══════════════════════════════════════════
-     PAGE 6 — PRIORITÉS RECOMMANDÉES
-══════════════════════════════════════════ -->
+<!-- ══ PAGE 6 — PRIORITÉS ══ -->
 <div class="page">
   <div class="page-header">
-    <span class="brand">DIAGNOSTIC PATRIMONIAL</span>
-    <span class="page-info">{{ prenom }} · Priorités</span>
+    <table><tr>
+      <td class="brand">DIAGNOSTIC PATRIMONIAL</td>
+      <td class="page-info">{{ prenom }} · Priorités</td>
+    </tr></table>
   </div>
   <div class="page-content">
-    <h2 class="section-title">🎯 Vos 3 priorités patrimoniales</h2>
-    <p class="section-subtitle">Les axes sur lesquels concentrer votre énergie en priorité.</p>
+    <div class="section-title">🎯 Vos 3 priorités patrimoniales</div>
+    <div class="section-subtitle">Les axes sur lesquels concentrer votre énergie en priorité.</div>
 
     {% for p in insights.priorites %}
     <div class="priority-card">
-      <div class="priority-num">{{ loop.index }}</div>
-      <div class="priority-content">
-        <h3>{{ p.titre }}</h3>
-        <p>{{ p.description }}</p>
-      </div>
+      <table><tr>
+        <td style="width:40px"><div class="priority-num">{{ loop.index }}</div></td>
+        <td class="priority-content">
+          <h3>{{ p.titre }}</h3>
+          <p>{{ p.description }}</p>
+        </td>
+      </tr></table>
     </div>
     {% endfor %}
 
-    <div style="background:#eef0fd;border-radius:8px;padding:14px 18px;margin-top:8px;">
-      <p style="font-size:9pt;color:#4361ee;line-height:1.5;">
-        💡 Ces priorités sont générales et ne constituent pas un conseil d'investissement personnalisé.
-        Un accompagnement individualisé permet d'affiner ces recommandations selon votre fiscalité,
-        votre situation familiale et vos objectifs précis.
-      </p>
+    <div class="info-box">
+      <p>💡 Ces priorités sont générales et ne constituent pas un conseil d'investissement personnalisé.
+      Un accompagnement individualisé permet d'affiner ces recommandations selon votre fiscalité,
+      votre situation familiale et vos objectifs précis.</p>
     </div>
   </div>
 </div>
 
 
-<!-- ══════════════════════════════════════════
-     PAGE 7 — PROJECTION
-══════════════════════════════════════════ -->
+<!-- ══ PAGE 7 — PROJECTION ══ -->
 <div class="page">
   <div class="page-header">
-    <span class="brand">DIAGNOSTIC PATRIMONIAL</span>
-    <span class="page-info">{{ prenom }} · Simulation</span>
+    <table><tr>
+      <td class="brand">DIAGNOSTIC PATRIMONIAL</td>
+      <td class="page-info">{{ prenom }} · Simulation</td>
+    </tr></table>
   </div>
   <div class="page-content">
-    <h2 class="section-title">📈 Simulation pédagogique</h2>
-    <p class="section-subtitle">Illustration de l'impact de l'épargne régulière dans le temps.</p>
+    <div class="section-title">📈 Simulation pédagogique</div>
+    <div class="section-subtitle">Illustration de l'impact de l'épargne régulière dans le temps.</div>
 
     <div class="projection-header">
-      <div class="proj-meta">
-        <label>Épargne estimée/mois</label>
-        <span>{{ "{:,}".format(projection.versements // (projection.versements // projection.prudent * 12 if projection.prudent else 1)).replace(",", " ") if false else "~" + "{:,}".format(projection.versements // 120).replace(",", " ") + " €" }}</span>
-      </div>
-      <div class="proj-meta">
-        <label>Durée simulée</label>
-        <span>10 ans</span>
-      </div>
-      <div class="proj-meta">
-        <label>Total versé</label>
-        <span>{{ "{:,}".format(projection.versements).replace(",", " ") }} €</span>
-      </div>
+      <table><tr>
+        <td>
+          <span class="proj-label">Épargne estimée/mois</span>
+          <span class="proj-value">{{ "{:,}".format(projection.versements // 120).replace(",", " ") }} €</span>
+        </td>
+        <td>
+          <span class="proj-label">Durée simulée</span>
+          <span class="proj-value">10 ans</span>
+        </td>
+        <td>
+          <span class="proj-label">Total versé</span>
+          <span class="proj-value">{{ "{:,}".format(projection.versements).replace(",", " ") }} €</span>
+        </td>
+      </tr></table>
     </div>
 
-    <div class="scenario-cards">
-      <div class="scenario-card prudent">
-        <div class="scenario-name">Prudent</div>
-        <div class="scenario-rate">Rendement estimé 3 %/an</div>
-        <div class="scenario-amount">{{ "{:,}".format(projection.prudent).replace(",", " ") }} €</div>
-        <div class="scenario-note">Fonds euros, livrets</div>
-      </div>
-      <div class="scenario-card equilibre">
-        <div class="scenario-name">Équilibré</div>
-        <div class="scenario-rate">Rendement estimé 6 %/an</div>
-        <div class="scenario-amount">{{ "{:,}".format(projection.equilibre).replace(",", " ") }} €</div>
-        <div class="scenario-note">Mix actions / obligations</div>
-      </div>
-      <div class="scenario-card dynamique">
-        <div class="scenario-name">Dynamique</div>
-        <div class="scenario-rate">Rendement estimé 9 %/an</div>
-        <div class="scenario-amount">{{ "{:,}".format(projection.dynamique).replace(",", " ") }} €</div>
-        <div class="scenario-note">Actions, immobilier</div>
-      </div>
-    </div>
+    <table class="scenario-table">
+      <tr>
+        <td>
+          <div class="scenario-card prudent">
+            <div class="scenario-name">Prudent</div>
+            <div class="scenario-rate">Rendement estimé 3 %/an</div>
+            <div class="scenario-amount">{{ "{:,}".format(projection.prudent).replace(",", " ") }} €</div>
+            <div class="scenario-note">Fonds euros, livrets</div>
+          </div>
+        </td>
+        <td>
+          <div class="scenario-card equilibre">
+            <div class="scenario-name">Équilibré</div>
+            <div class="scenario-rate">Rendement estimé 6 %/an</div>
+            <div class="scenario-amount">{{ "{:,}".format(projection.equilibre).replace(",", " ") }} €</div>
+            <div class="scenario-note">Mix actions / obligations</div>
+          </div>
+        </td>
+        <td>
+          <div class="scenario-card dynamique">
+            <div class="scenario-name">Dynamique</div>
+            <div class="scenario-rate">Rendement estimé 9 %/an</div>
+            <div class="scenario-amount">{{ "{:,}".format(projection.dynamique).replace(",", " ") }} €</div>
+            <div class="scenario-note">Actions, immobilier</div>
+          </div>
+        </td>
+      </tr>
+    </table>
 
     <div class="versements-bar">
-      <p>Total de vos versements sur la période</p>
-      <span>{{ "{:,}".format(projection.versements).replace(",", " ") }} €</span>
+      <table><tr>
+        <td class="label">Total de vos versements sur la période</td>
+        <td class="amount">{{ "{:,}".format(projection.versements).replace(",", " ") }} €</td>
+      </tr></table>
     </div>
 
-    <div class="projection-disclaimer">
+    <div class="disclaimer-box">
       ⚠️ Ces simulations sont purement pédagogiques. Elles ne constituent pas une promesse de rendement.
       Les performances passées ne présagent pas des performances futures. Les montants réels dépendront
       du niveau de risque, des frais, de la fiscalité applicable et des conditions de marché.
@@ -712,37 +664,30 @@
 </div>
 
 
-<!-- ══════════════════════════════════════════
-     PAGE 8 — CONCLUSION + CTA
-══════════════════════════════════════════ -->
+<!-- ══ PAGE 8 — CONCLUSION ══ -->
 <div class="page">
   <div class="page-header">
-    <span class="brand">DIAGNOSTIC PATRIMONIAL</span>
-    <span class="page-info">{{ prenom }} · Et maintenant ?</span>
+    <table><tr>
+      <td class="brand">DIAGNOSTIC PATRIMONIAL</td>
+      <td class="page-info">{{ prenom }} · Et maintenant ?</td>
+    </tr></table>
   </div>
   <div class="page-content">
-    <h2 class="section-title">Et maintenant ?</h2>
-    <p class="section-subtitle">Ce diagnostic est un point de départ, pas une fin.</p>
+    <div class="section-title">Et maintenant ?</div>
+    <div class="section-subtitle">Ce diagnostic est un point de départ, pas une fin.</div>
 
-    <div class="conclusion-box">
-      {{ insights.conclusion }}
-    </div>
+    <div class="conclusion-box">{{ insights.conclusion }}</div>
 
     <div class="cta-box">
       <h2>Passons à l'étape suivante ensemble</h2>
-      <p>
-        Un échange de 30 minutes suffit pour analyser votre situation en détail,
-        répondre à vos questions et définir les premières actions concrètes.
-      </p>
-      <a class="cta-url" href="{{ calendly_url }}">
-        → Réserver votre appel gratuit
-      </a>
+      <p>Un échange de 30 minutes suffit pour analyser votre situation en détail,<br>
+      répondre à vos questions et définir les premières actions concrètes.</p>
+      <a class="cta-url" href="{{ calendly_url }}">→ Réserver votre appel gratuit</a>
     </div>
 
     <div class="footer-note">
       Document généré le {{ date_str }} · {{ advisor_name }} ·
       Ce diagnostic ne constitue pas un conseil personnalisé en investissement au sens de la réglementation française.
-      Les informations contenues dans ce document sont fournies à titre pédagogique uniquement.
     </div>
   </div>
 </div>
