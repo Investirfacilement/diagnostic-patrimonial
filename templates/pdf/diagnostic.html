@@ -487,8 +487,8 @@
     <div class="section-subtitle">Les axes à améliorer selon votre profil actuel.</div>
 
     {% for v in insights.vigilances %}
-    {% set cls = 'point-red' if v.niveau == 'red' else 'point-orange' %}
-    {% set dcls = 'dot-red' if v.niveau == 'red' else 'dot-orange' %}
+    {% set cls = 'point-red' if v.niveau == 'rouge' else 'point-orange' %}
+    {% set dcls = 'dot-red' if v.niveau == 'rouge' else 'dot-orange' %}
     <div class="point-item {{ cls }}">
       <table class="point-table"><tr>
         <td class="point-dot-cell"><div class="point-dot {{ dcls }}">●</div></td>
