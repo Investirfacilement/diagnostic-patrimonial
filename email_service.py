@@ -78,14 +78,45 @@ def send_diagnostic(to_email: str, prenom: str, pdf_path: str) -> None:
     _send(to_email, prenom, f"{prenom}, votre diagnostic patrimonial est prêt", html, pdf_path)
 
 
-def notify_advisor(prenom: str, email: str, profile_name: str, total: int, pdf_path: str = None) -> None:
+def notify_advisor(prenom: str, email: str, profile_name: str, total: int,
+                   pdf_path: str = None, answers: dict = None) -> None:
+    from scoring import QUESTIONS
+
     advisor_email = os.environ.get("ADVISOR_EMAIL", os.environ["SMTP_SENDER_EMAIL"])
     advisor_name  = os.environ.get("ADVISOR_NAME", "Conseiller")
     calendly      = os.environ.get("CALENDLY_URL", "#")
 
+    answers_html = ""
+    if answers:
+        block_labels = {1: "Sécurité financière", 2: "Capacité d'épargne",
+                        3: "Vision & stratégie", 4: "Patrimoine & investissement"}
+        current_block = None
+        rows = []
+        for q in QUESTIONS:
+            if q["block"] != current_block:
+                current_block = q["block"]
+                rows.append(
+                    f'<tr><td colspan="2" style="padding:10px 8px 4px;font-weight:bold;'
+                    f'color:#4361ee;font-size:13px;border-top:2px solid #eee">'
+                    f'Bloc {current_block} — {block_labels[current_block]}</td></tr>'
+                )
+            answer_idx = answers.get(q["id"])
+            answer_text = q["answers"][answer_idx]["text"] if answer_idx is not None else "—"
+            rows.append(
+                f'<tr>'
+                f'<td style="padding:6px 8px;color:#555;font-size:13px;width:55%">{q["text"]}</td>'
+                f'<td style="padding:6px 8px;font-size:13px;font-weight:bold">{answer_text}</td>'
+                f'</tr>'
+            )
+        answers_html = f"""
+  <h3 style="margin-top:32px;color:#1a1a2e;font-size:15px">Détail des réponses</h3>
+  <table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif">
+    {''.join(rows)}
+  </table>"""
+
     html = f"""
-<div style="font-family:Arial,sans-serif;max-width:500px;margin:auto">
-  <h2>🔔 Nouveau prospect qualifié</h2>
+<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto">
+  <h2 style="color:#1a1a2e">🔔 Nouveau prospect qualifié</h2>
   <table style="width:100%;border-collapse:collapse">
     <tr><td style="padding:8px;color:#666">Prénom</td><td><strong>{prenom}</strong></td></tr>
     <tr><td style="padding:8px;color:#666">Email</td><td>{email}</td></tr>
@@ -96,6 +127,7 @@ def notify_advisor(prenom: str, email: str, profile_name: str, total: int, pdf_p
     <a href="{calendly}" style="background:#4361ee;color:#fff;padding:10px 20px;
        border-radius:6px;text-decoration:none">Voir Calendly</a>
   </p>
+  {answers_html}
 </div>
 """
     _send(advisor_email, advisor_name,
