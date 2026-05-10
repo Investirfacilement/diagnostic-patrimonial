@@ -324,28 +324,37 @@
 
 <!-- PAGE 1 — COUVERTURE -->
 <div class="page">
-  <div class="cover-wrap">
+  <div style="background:#0d1b2a; min-height:265mm; padding:48px 48px 32px;">
     <div class="cover-badge">Diagnostic patrimonial</div>
     <div class="cover-title">Votre diagnostic<br>patrimonial<br>personnalisé</div>
     <div class="cover-subtitle-text">Une première lecture claire de votre situation financière<br>et de vos priorités d'investissement.</div>
     <div class="cover-divider"></div>
-    <table class="cover-meta-table">
+    <table style="border-collapse:collapse;">
       <tr>
-        <td><span class="meta-label">Préparé pour</span><span class="meta-value">{{ prenom }}</span></td>
-        <td><span class="meta-label">Date</span><span class="meta-value">{{ date_str }}</span></td>
-        <td><span class="meta-label">Score global</span><span class="meta-value" style="color:{{ score_color }}">{{ scores.total }}/100</span></td>
+        <td style="padding-right:40px; vertical-align:top;">
+          <span style="color:#4a6272; font-size:8pt; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:4px;">Préparé pour</span>
+          <span style="color:#ffffff; font-size:13pt; font-weight:600;">{{ prenom }}</span>
+        </td>
+        <td style="padding-right:40px; vertical-align:top;">
+          <span style="color:#4a6272; font-size:8pt; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:4px;">Date</span>
+          <span style="color:#ffffff; font-size:13pt; font-weight:600;">{{ date_str }}</span>
+        </td>
+        <td style="vertical-align:top;">
+          <span style="color:#4a6272; font-size:8pt; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:4px;">Score global</span>
+          <span style="color:{{ score_color }}; font-size:13pt; font-weight:600;">{{ scores.total }}/100</span>
+        </td>
       </tr>
     </table>
-    <div class="cover-disclaimer">
+    <div style="border-left:3px solid #4361ee; padding:12px 20px; margin-top:32px; color:#8fa3b1; font-size:8pt; line-height:1.6;">
       ⚠️ Ce diagnostic ne constitue pas un conseil personnalisé en investissement au sens réglementaire.
       Il sert à identifier vos grandes priorités patrimoniales et à préparer un échange avec un professionnel.
     </div>
   </div>
-  <div class="cover-footer">
-    <table class="cover-footer-table">
+  <div style="background:#4361ee; padding:16px 48px;">
+    <table style="width:100%; border-collapse:collapse;">
       <tr>
-        <td>{{ advisor_name }}</td>
-        <td class="cover-footer-right">{{ date_str }}</td>
+        <td style="color:rgba(255,255,255,0.85); font-size:9pt;">{{ advisor_name }}</td>
+        <td style="color:rgba(255,255,255,0.85); font-size:9pt; text-align:right;">{{ date_str }}</td>
       </tr>
     </table>
   </div>
